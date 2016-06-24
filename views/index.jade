@@ -1,0 +1,9 @@
+extends layout
+
+block content
+
+  h1= title
+  .container
+    div(ng-app="fileApp",ng-controller="fileCtrl",ng-init="listFile(0)")
+      div(ng-repeat="file in files",ng-model="files")
+        div.files(ng-click="downloadFile(file.id)"){{file.name}}

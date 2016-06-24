@@ -1,0 +1,64 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport",content="width=device-width,initial-scale=1")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet",href='/angular-material/angular-material.css')
+    link(rel="stylesheet",href='/bs/css/bootstrap.css')
+    script(src="/angular/angular.js")
+    script(src="/angular-animate/angular-animate.js")
+    script(src="/angular-aria/angular-aria.js")
+    script(src="/angular-material/angular-material.js")
+    script(src="/cookie/angular-cookies.js")
+    script(src="/upload/angular-file-upload.js")
+    script(src="/javascripts/auth.js")
+    script(src="/javascripts/upload.js")
+    script(src="/jq/jquery.js")
+    script(src="/bs/js/bootstrap.js")
+    script(src="/javascripts/file.js")
+
+  body(ng-app="authApp",ng-controller="authCtrl")
+    nav.navbar.navbar-inverse
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') Drive
+        #navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li.active
+              a(href='/') Home
+            li
+              a(href='/') File
+            li
+              a(href='/upload') Upload
+            li.dropdown(ng-if='isAdmin()')
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                span.glyphicon.glyphicon-user
+                | Admin
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='/admin') Manage Admin
+                li
+                  a(href='/admin/add') Add Admin
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                span.glyphicon.glyphicon-user
+                {{username}}
+                span.caret
+              ul.dropdown-menu
+                li(ng-if='isAdmin()')
+                  a(href='#') Page 1-1
+                li
+                  a(href='/profile/{{username}}') Profile
+                li
+                  a(href='#logout',ng-click="logout()") Logout
+
+
+    block content
