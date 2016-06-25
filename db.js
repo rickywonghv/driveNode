@@ -26,7 +26,8 @@ var user=new Schema({
     name:{type:String,required: true},
     createDT:{type:Number},
     updateDT:{type:Number},
-    admin:{type:Boolean,required: true}
+    admin:{type:Boolean,required: true},
+    space:{type:Number,require:true}
 });
 var dir=new Schema({
    name:{type:String,unique:true},

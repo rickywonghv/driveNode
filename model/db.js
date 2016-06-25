@@ -27,6 +27,17 @@ var FindAll=function(query,model,next){
     });
 };
 
+var FindAllFilter=function(query,filter,model,next){
+    var DB=mongoose.model(model);
+    DB.find(query,filter,function(err,data){
+        if(err){
+            next({success:false,error:err});
+            return;
+        }
+        next({success:true,data:data});
+    });
+};
+
 var FindOne=function(query,model,next){
     var DB=mongoose.model(model);
     DB.findOne(query,function(err,data){
@@ -62,6 +73,7 @@ var Update=function(query,newquery,next){
 
 module.exports.Add=Add;
 module.exports.FindAll=FindAll;
+module.exports.FindAllFilter=FindAllFilter;
 module.exports.FindOne=FindOne;
 module.exports.Remove=Remove;
 module.exports.Update=Update;

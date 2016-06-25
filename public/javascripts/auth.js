@@ -1,8 +1,9 @@
 /**
  * Created by damon on 6/21/16.
  */
-var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp']);
-    app.controller('loginCtrl', function($scope, AuthService,$window,$rootScope,$mdDialog, $mdMedia) {
+var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp','adminApp','angular-loading-bar','ngAnimate']);
+    app.controller('loginCtrl', function($scope, AuthService,$window,$rootScope,$mdDialog, $mdMedia,cfpLoadingBar) {
+        cfpLoadingBar.start();
         $scope.credentials = {
             username: '',
             password: ''
@@ -21,6 +22,7 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
                     .targetEvent()
             );
         };
+        
         $scope.login = function (credentials) {
             if(credentials.username&&credentials.password){
                 AuthService.login(credentials).then(function(data){
@@ -36,12 +38,11 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
                 showAlert("Error","Please Enter Username and Password");
                 $scope.msg="Please Enter Username and Password";
             }
-
         };
-
     });
 
-    app.controller("authCtrl",function($scope,$window,USER_ROLES,AuthService,$rootScope,$cookies){
+    app.controller("authCtrl",function($scope,$window,USER_ROLES,AuthService,$rootScope,$cookies,cfpLoadingBar){
+        cfpLoadingBar.start();
         if(AuthService.isAuthenticated()){
             $scope.currentUser = null;
             $scope.role = $window.sessionStorage.getItem("role");

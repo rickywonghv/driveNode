@@ -2,8 +2,38 @@ extends layout
 
 block content
 
-  h1= title
-  .container
-    div(ng-app="fileApp",ng-controller="fileCtrl",ng-init="listFile(0)")
-      div(ng-repeat="file in files",ng-model="files")
-        div.files(ng-click="downloadFile(file.id)"){{file.name}}
+  .container(ng-app="fileApp",ng-controller="fileCtrl",ng-init="listFile(0)")
+    md-content.col-md-3()
+      div
+        md-button.md-raised.md-primary(ng-href="/upload/#?dir={{currentDir}}") Upload
+      div
+        md-button.md-raised.md-warn(ng-click="newDir(currentDir)") New Directory
+      br
+      div Current Directory:
+        span(ng-if="currentDirName==null") /
+        {{currentDirName}}
+
+      md-button(ng-click="listFile(0)",ng-if="currentDir!==0") Back
+      md-content()
+        md-list
+          md-list-item.md-1-line(ng-repeat="dir in dirs",ng-model="dir")
+            span.md-list-item-text(ng-click="listFile(dir.id,dir.name)"){{dir.name}}
+            md-divider(ng-show="!$last")
+
+    md-content()
+      md-list
+        md-list-item.md-2-line(ng-repeat="file in files",ng-model="files")
+          a.files.md-list-item-text(ng-href="/api/download?fileId={{file.id}}&token={{token}}"){{file.name}}
+          md-button.md-raised.md-warn(ng-click="delFile(file.id,file.name,currentDir)") Delete
+          md-divider(ng-show="!$last")
+    //ng-click="downloadFile(file.id)",
+
+    div(style='visibility: hidden')
+      #newDir.md-dialog-container
+        md-dialog(layout-padding='1px',layout-gt-sm="column",layout="center center")
+          div(layout-gt-sm="column",layout="center center")
+            h3 New Directory
+            md-input-container.md-block(flex-gt-sm)
+              label Directory Name
+              input(ng-model="dirname")
+            md-button.md-raised.md-warn(ng-click="createDir(currentDir)") Create

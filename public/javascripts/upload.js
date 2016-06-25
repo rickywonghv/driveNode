@@ -1,7 +1,8 @@
 'use strict';
-angular.module('uploadApp', ['angularFileUpload','authApp'])
-.controller('uploadCtrl', ['$scope', 'FileUploader','$window','$http','$cookies', function($scope, FileUploader,$window,$http,$cookies) {
+angular.module('uploadApp', ['angularFileUpload','authApp','fileApp'])
+.controller('uploadCtrl', ['$scope', 'FileUploader','$window','$location', function($scope, FileUploader,$window,$location,Toast) {
         $scope.token=$window.sessionStorage.getItem("token");
+        $scope.dir=$location.search().dir;
         var uploader = $scope.uploader = new FileUploader({
             url: '/api/upload'
         });
@@ -28,7 +29,7 @@ angular.module('uploadApp', ['angularFileUpload','authApp'])
         };
         uploader.onBeforeUploadItem = function(item) {
             $scope.tokenfield=$window.sessionStorage.getItem("token");
-            item.formData.push({token:$scope.token});
+            item.formData.push({token:$scope.token,dir:$scope.dir});
             //console.info('onBeforeUploadItem', item);
         };
         uploader.onProgressItem = function(fileItem, progress) {
@@ -40,9 +41,10 @@ angular.module('uploadApp', ['angularFileUpload','authApp'])
         uploader.onSuccessItem = function(fileItem, response, status, headers) {
             //console.info('onSuccessItem', fileItem, response, status, headers);
             $scope.success="Upload Success";
+            //Toast.showSimple("Upload Success");
         };
         uploader.onErrorItem = function(fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
+            //console.info('onErrorItem', fileItem, response, status, headers);
         };
         uploader.onCancelItem = function(fileItem, response, status, headers) {
             //console.info('onCancelItem', fileItem, response, status, headers);

@@ -9,6 +9,7 @@ var fs=require("fs");
 var routes = require('./routes/index');
 var api=require('./routes/api');
 var admin=require('./routes/admin');
+var adminapi=require('./routes/adminapi');
 require("./db");
 
 var app = express();
@@ -17,7 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,6 +29,7 @@ app.use('/angular',express.static(path.join(__dirname, '/node_modules/angular'))
 app.use('/angular-animate',express.static(path.join(__dirname, '/node_modules/angular-animate')));
 app.use('/angular-aria',express.static(path.join(__dirname, '/node_modules/angular-aria')));
 app.use('/angular-material',express.static(path.join(__dirname, '/node_modules/angular-material')));
+app.use('/angular-loading-bar',express.static(path.join(__dirname, '/node_modules/angular-loading-bar')));
 app.use('/jq',express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.use('/bs',express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
 app.use('/cookie',express.static(path.join(__dirname, '/node_modules/angular-cookies')));
@@ -36,6 +38,7 @@ app.use('/upload',express.static(path.join(__dirname, '/node_modules/angular-fil
 app.use('/', routes);
 app.use('/api', api);
 app.use('/admin',admin);
+app.use('/admin/api',adminapi);
 
 
 

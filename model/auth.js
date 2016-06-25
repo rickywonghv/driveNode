@@ -19,25 +19,25 @@ var AddUser=function(query,next){
             return;
         }
         if(check.object(query)) {
-            if(check.nonEmptyString(query.username,query.password,query.conpassword,query.email,query.name,query.admin)) {
+            if(check.nonEmptyString(query.username,query.password,query.conpassword,query.email,query.name,query.admin)&&check.number(query.space)) {
                 if(query.password==query.conpassword){
                     var hash=bc.hashSync(query.password, bc.genSaltSync());
                     var DT=datatime.create().now();
-                    var json={username:query.username,password:hash,email:query.email,name:query.name,admin:query.admin,createDT:DT,updateDT:DT};
+                    var json={username:query.username,password:hash,email:query.email,name:query.name,admin:query.admin,createDT:DT,updateDT:DT,space:query.space};
                     DB.Add(json,"user",function (data) {
-                        next(data);
+                        next({success:true,data:data,status:201});
                         return
                     });
                 }else {
-                    next({success:false,error:"Password are not match!"});
+                    next({success:false,error:"Password are not match!",status:400});
                     return
                 }
             }else{
-                next({success:false,error:"1Miss Param"});
+                next({success:false,error:"1Miss Param",status:400});
                 return
             }
         }else{
-            next({success:false,error:"Miss Param"});
+            next({success:false,error:"Miss Param",status:401});
             return
         }
     });
