@@ -5,6 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs=require("fs");
+var mongoose=require("mongoose");
+var pdf = require('express-pdf');
+
+
+var child_process=require("child_process");
 
 var routes = require('./routes/index');
 var api=require('./routes/api');
@@ -24,6 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(pdf);
 app.use('/jquery',express.static(path.join(__dirname, '/node_modules/jquery/dist')));
 app.use('/angular',express.static(path.join(__dirname, '/node_modules/angular')));
 app.use('/angular-animate',express.static(path.join(__dirname, '/node_modules/angular-animate')));
@@ -34,12 +40,14 @@ app.use('/jq',express.static(path.join(__dirname, '/node_modules/jquery/dist')))
 app.use('/bs',express.static(path.join(__dirname, '/node_modules/bootstrap/dist')));
 app.use('/cookie',express.static(path.join(__dirname, '/node_modules/angular-cookies')));
 app.use('/upload',express.static(path.join(__dirname, '/node_modules/angular-file-upload/dist')));
+app.use('/context-menu',express.static(path.join(__dirname, '/node_modules/angular-bootstrap-contextmenu')));
+app.use('/angular-audio',express.static(path.join(__dirname, '/node_modules/angular-audio/app')));
+
 
 app.use('/', routes);
 app.use('/api', api);
 app.use('/admin',admin);
 app.use('/admin/api',adminapi);
-
 
 
 // catch 404 and forward to error handler

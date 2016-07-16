@@ -5,20 +5,41 @@ extends layout
 
 block content
     .container(ng-app="adminApp",ng-controller="adminCtrl",ng-init="usersList()")
-        md-button.md-raised.md-default(ng-click="newUserDia()") New User
+        md-button.md-raised.md-warn(ng-click="newUserDia()",layout-lt-md="right") New User
         md-toolbar.md-theme-light
             h2.md-toolbar-tools Users
         md-content
             md-list
-                md-list-item.md-2-line(ng-repeat="($index,admin) in admins")
+                md-list-item.md-2-line
+                    md-input-container(flex)
+                        label Search
+                        input.md-input(type="text",ng-model="adminSearchBar")
+                md-list-item.md-2-line(ng-repeat="($index,admin) in admins | filter:adminSearchBar")
                     .md-list-item-text
                         h3 {{$index+1}} {{admin.username}}
-                            |(ID: {{admin.id}})
+                            |(ID: {{admin._id}})
                         h4 {{admin.name}}
                         p Admin: {{admin.admin}}
-                    md-button.md-raised.md-warn(ng-click="userMore(admin.id)") More
+                    md-button.md-raised.md-warn(ng-click="userData(admin._id)") More
                     md-divider(ng-if="!$last")
-
+        div(style="visibility:hidden")
+            #userData.md-dialog-container
+                md-dialog(layout-padding='4px',layout-gt-md="row",layout="center center")
+                    div(layout-gt-md="column",layout="center center")
+                        md-content(layout-padding)
+                            h3 User Data
+                            div(layout-gt-md="row")
+                                |ID: {{userData.id}}
+                            div(layout-gt-md="row")
+                                |Username: {{userData.username}}
+                            div(layout-gt-md="row")
+                                |Email: {{userData.email}}
+                            div(layout-gt-md="row")
+                                |Admin: {{userData.admin}}
+                            div(layout-gt-md="row")
+                                |Create DateTime: {{userData.createDT}}
+                            div(layout-gt-md="row")
+                                |Update DateTime: {{userData.updateDT}}
         div(style='visibility: hidden')
             #newUser.md-dialog-container
                 md-dialog(layout-padding='4px',layout-gt-md="row",layout="center center")
@@ -57,3 +78,5 @@ block content
                                             md-option(value="false") False
                                 div(layout-gt-sm="row")
                                     md-button.md-raised.md-warn(type="submit") Create
+                                div(layout-gt-sm="row",ng-model="success",layout="center center") {{success}}
+                                div(layout-gt-sm="row",ng-repeat="error in errors",layout="center center") {{error.message}}

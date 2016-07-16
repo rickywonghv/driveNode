@@ -33,20 +33,45 @@ var dir=new Schema({
    name:{type:String,unique:true},
    parent:{type:String,ref:"dir"},
    share:{type:Boolean},
-   owner:{type:String,ref:"user"}
+   owner:{type:String,ref:"user"},
+   createDT:{type:Number},
+   updateDT:{type:Number}
 });
 var file=new Schema({
     key:{type:String},
+    filename:String,
+    ext:String,
     meta:{type:Object},
     parent:{type:String,ref:"dir"},
     share:{type:Boolean},
-    owner:{type:String,ref:"user"}
+    owner:{type:String,ref:"user"},
+    createDT:{type:Number}
 });
+var trash=new Schema({
+    owner:{type:String,ref:"user"},
+    fileMeta:{type:Object,required:true},
+    createDT:{type:Number}
+});
+
+var log=new Schema({
+    uid:{type:String,ref:"user",required:true},
+    fileId:{type:String,required:true},
+    action:{type:String,required:true},
+    cat:{type:String,required:true},
+    createDT:{type:Number}
+});
+
+file.index({filename:'text',ext:'text'});
 
 user.plugin(uniqueValidator, { message: 'Sorry, {PATH} : {VALUE} is used already, please enter another and submit again!' });
 dir.plugin(uniqueValidator, { message: 'Sorry, {PATH} : {VALUE} is used already.' });
 file.plugin(uniqueValidator, { message: 'Sorry, {PATH} : {VALUE} is used already.' });
+trash.plugin(uniqueValidator, { message: 'Sorry, {PATH} : {VALUE} is used already.' });
+log.plugin(uniqueValidator, { message: 'Sorry, {PATH} : {VALUE} is used already.' });
+trash.plugin(autopopulate);
 
 module.exports=mongoose.model("user",user);
 module.exports=mongoose.model("file",file);
 module.exports=mongoose.model("dir",dir);
+module.exports=mongoose.model("trash",trash);
+module.exports=mongoose.model("log",log);

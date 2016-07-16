@@ -1,8 +1,13 @@
 /**
  * Created by damon on 6/21/16.
  */
-var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp','adminApp','angular-loading-bar','ngAnimate']);
+var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp','profileApp','adminApp','angular-loading-bar','ngAnimate','uiApp','ui.bootstrap.contextMenu','ngAria']);
+    app.run(function($rootScope){
+        $rootScope.online= navigator.onLine;
+    });
+
     app.controller('loginCtrl', function($scope, AuthService,$window,$rootScope,$mdDialog, $mdMedia,cfpLoadingBar) {
+        AuthService.ckConnection();
         cfpLoadingBar.start();
         $scope.credentials = {
             username: '',
@@ -24,8 +29,10 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
         };
         
         $scope.login = function (credentials) {
+            cfpLoadingBar.start();
             if(credentials.username&&credentials.password){
                 AuthService.login(credentials).then(function(data){
+                    cfpLoadingBar.complete();
                     if(data.success){
                         $rootScope.username=data.userdata.username;
                         $window.location.href="/";
@@ -35,6 +42,7 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
                     }
                 });
             }else{
+                cfpLoadingBar.complete();
                 showAlert("Error","Please Enter Username and Password");
                 $scope.msg="Please Enter Username and Password";
             }
@@ -57,6 +65,7 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
         $scope.isAdmin=function(){
             return AuthService.isAdmin();
         };
+        AuthService.ckConnection();
     });
 
 
@@ -65,7 +74,7 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
         false: 'user'
     });
 
-    app.factory('AuthService', function ($http,$cookies,USER_ROLES,$window) {
+    app.factory('AuthService', function ($http,$cookies,USER_ROLES,$window,$rootScope,Toast,Dialog) {
         var authService = {};
         
         authService.login = function (credentials) {
@@ -118,6 +127,18 @@ var app=angular.module('authApp', ['ngMaterial','ngCookies','uploadApp','fileApp
         authService.isAuthorized = function (authorizedRoles) {
             return authorizedRoles;
         };
+
+        authService.ckConnection=function(){
+            $rootScope.$watch("online",function(newVal,oldVal){
+                if(!newVal){
+                    Dialog.showAlert("Connection Error!","Error! Please connect to Internet!");
+                }
+                if(!oldVal&&newVal){
+                    Toast.showSimple("Network Connected");
+                }
+            });
+        }
+
         return authService;
     });
 
