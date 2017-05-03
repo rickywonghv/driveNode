@@ -315,7 +315,7 @@ function ckTk(token,next){
     }else{
         next({success:false,error:"Miss Param"});
     }
-}
+};
 
 function genTk(query,next){
     if(check.object(query)) {

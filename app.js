@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var fs=require("fs");
 var mongoose=require("mongoose");
 var pdf = require('express-pdf');
-
+var auth=require("./model/auth.js");
 
 var child_process=require("child_process");
 
@@ -17,6 +17,13 @@ var admin=require('./routes/admin');
 var adminapi=require('./routes/adminapi');
 require("./db");
 
+checkDir("./files");
+checkDir("./files/encrypt");
+checkDir("./files/decrypt");
+checkDir("./files/qr");
+checkDir("./files/zip");
+checkDir("./files/zip/decrypt");
+checkDir("./files/downloads");
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -81,5 +88,19 @@ app.use(function(err, req, res, next) {
   });
 });
 
+
+function checkDir(path){
+    if (fs.existsSync(path)) {
+      console.log("Directory existed");
+    }else{
+      fs.mkdir(path,function(err,data){
+        if(err){
+            console.log(err);
+        }else{
+          console.log('Directory created');
+        }
+      })
+    }
+}
 
 module.exports = app;
